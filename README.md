@@ -69,13 +69,12 @@ python -m epichron.export       # fichiers du site dans app/public/data/
 ## Site
 
 Une interface en panneaux, inspirée des stations d'imagerie médicale :
-deux bustes réalistes (âge civil et âge biologique) vieillis par le rendu : rides, barbe qui grisonne, taches, affaissement,
-génome 3D (chromosomes à l'échelle, sites de l'horloge),
-carte âge réel × âge prédit, commandes et hélice 3D du locus. L'âge est recalculé dans le navigateur.
 
-La tête est un avatar générique, jamais le visage de la personne : les données ne contiennent que de la méthylation.
-Modèle 3D : « Infinite, 3D Head Scan » par Lee Perry-Smith, sous licence
-[CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) (`app/public/models/head_LICENSE.txt`).
+- **Génome 3D** : les 23 chromosomes à l'échelle et les 249 sites de l'horloge, éclairés selon la personne choisie.
+- **Cernes** : la méthylation moyenne de chaque site par décennie, en coupe de tronc d'arbre, avec l'âge civil et l'âge biologique de la personne en anneaux.
+- **Âge réel × âge prédit** : les 859 personnes jamais vues à l'entraînement, et un viseur sur la personne choisie.
+- **Pourquoi cet âge ?** : les sites qui ont le plus vieilli ou rajeuni la personne par rapport à quelqu'un de son âge, en années.
+- **Visite guidée** en cinq étapes. L'âge est recalculé dans le navigateur, sans serveur.
 
 ```bash
 cd app
@@ -113,6 +112,7 @@ Les fichiers vivent dans `app/public/data/`. Tout changement de format se décid
 | `metrics.json` | par modèle et par jeu : `mae`, `median_ae`, `pearson_r`, `n`, plus `n_cpgs` |
 | `samples.json` | 60 personnes externes : `gsm`, `age`, `sex`, `betas` (dans l'ordre de `cpgs`), `lightgbm` |
 | `markers.json` | les 6 sites les plus corrélés à l'âge : `cpg`, `gene`, `r`, `points` (âge, bêta) |
+| `rings.json` | par décennie d'âge (10 à 90 et plus) : `decade`, `n`, `betas` moyens dans l'ordre de `cpgs` |
 
 B peut construire le site avec de faux fichiers au même format en attendant les vrais.
 
