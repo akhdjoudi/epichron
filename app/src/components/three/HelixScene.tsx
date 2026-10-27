@@ -1,6 +1,6 @@
 "use client";
 
-import { Grid, Html, OrbitControls } from "@react-three/drei";
+import { Grid, OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import { useLayoutEffect, useMemo, useRef } from "react";
@@ -85,7 +85,6 @@ function Helix({ cpgs, betas }: { cpgs: Cpg[]; betas: number[] | null }) {
     });
   });
 
-  const lead = sites[0];
   return (
     <group rotation={[0, 0, -0.35]}>
       <group ref={spin}>
@@ -117,15 +116,7 @@ function Helix({ cpgs, betas }: { cpgs: Cpg[]; betas: number[] | null }) {
             </group>
           );
         })}
-        {lead && (
-          <Html position={lead.head} zIndexRange={[10, 0]} style={{ pointerEvents: "none" }}>
-            <span className="num ml-3 whitespace-nowrap text-[10px] text-amber">CH₃ · {lead.cpg.gene ?? lead.cpg.cpg}</span>
-          </Html>
-        )}
       </group>
-      <Html position={[RADIUS + 0.3, -PAIRS * RISE * 0.42, 0]} zIndexRange={[10, 0]} style={{ pointerEvents: "none" }}>
-        <span className="num whitespace-nowrap text-[10px] text-ink-2">squelette sucre-phosphate</span>
-      </Html>
     </group>
   );
 }
