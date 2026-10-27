@@ -119,4 +119,8 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    # Réimporte le module sous son vrai nom : sinon joblib enregistre les classes sous __main__
+    # et epichron.export ne peut plus recharger les modèles.
+    from epichron.train import main as run
+
+    run()
