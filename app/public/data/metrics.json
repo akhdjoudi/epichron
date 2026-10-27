@@ -1,0 +1,43 @@
+{
+  "elasticnet": {
+    "external": {
+      "mae": 2.96,
+      "median_ae": 2.37,
+      "pearson_r": 0.986,
+      "n": 729
+    },
+    "test": {
+      "mae": 3.81,
+      "median_ae": 3.08,
+      "pearson_r": 0.935,
+      "n": 130
+    },
+    "train": {
+      "mae": 1.75,
+      "median_ae": 1.38,
+      "pearson_r": 0.989,
+      "n": 526
+    },
+    "n_cpgs": 249
+  },
+  "lightgbm": {
+    "external": {
+      "mae": 3.95,
+      "median_ae": 3.59,
+      "pearson_r": 0.98,
+      "n": 729
+    },
+    "test": {
+      "mae": 4.16,
+      "median_ae": 3.1,
+      "pearson_r": 0.924,
+      "n": 130
+    },
+    "train": {
+      "mae": 0.01,
+      "median_ae": 0.0,
+      "pearson_r": 1.0,
+      "n": 526
+    }
+  }
+}

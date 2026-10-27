@@ -1,5 +1,5 @@
 # Données (téléchargées par epichron.geo, jamais dans git)
-data/
+/data/
 *.parquet
 *.txt.gz
 
