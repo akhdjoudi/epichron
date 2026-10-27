@@ -14,6 +14,18 @@ d'une personne à partir d'une prise de sang, puis le compare à son âge réel.
 - Mesurer l'**accélération du vieillissement** (âge prédit moins âge réel) selon le sexe et le jeu de données.
 - Tout présenter dans un site web interactif, avec un modèle qui tourne dans le navigateur.
 
+## Résultats
+
+Horloge ElasticNet de **249 sites CpG**, entraînée sur GSE40279 :
+
+| Modèle | Test interne (GSE40279, n = 130) | Cohorte externe (GSE87571, n = 729) |
+|---|---|---|
+| ElasticNet | 3,8 ans d'erreur moyenne, r = 0,935 | **3,0 ans**, r = 0,986 |
+| LightGBM | 4,2 ans, r = 0,924 | 4,0 ans, r = 0,980 |
+
+ELOVL2, FHL2 et KLF14, les marqueurs connus du vieillissement, ressortent d'eux-mêmes parmi les sites retenus.
+LightGBM sur-apprend (erreur quasi nulle sur l'entraînement) : l'ElasticNet reste le modèle de référence.
+
 ## Données
 
 Uniquement des données publiques et anonymisées de GEO (puce Illumina 450K, sang total).
@@ -45,6 +57,27 @@ Environ 4 Go à télécharger. Les fichiers bruts vont dans `data/raw/`, les tab
 - `<GSE>_betas.parquet` : valeurs bêta (float32), **une ligne par site CpG, une colonne par échantillon**
 - `<GSE>_meta.parquet` : une ligne par échantillon (index GSM) avec `age`, `sex`, `tissue`, `dataset`
 
+## Reproduire le modèle
+
+```bash
+python -m epichron.annotation   # manifeste Illumina 450K
+python -m epichron.preprocess   # sites communs, imputation, présélection (train seulement)
+python -m epichron.train        # ElasticNet + LightGBM, métriques
+python -m epichron.export       # fichiers du site dans app/public/data/
+```
+
+## Site
+
+Une interface en panneaux, inspirée des stations d'imagerie médicale :
+génome 3D (chromosomes à l'échelle, sites de l'horloge), méthylome rendu comme un cliché,
+carte âge réel × âge prédit, commandes et hélice 3D du locus. L'âge est recalculé dans le navigateur.
+
+```bash
+cd app
+npm install
+npm run dev
+```
+
 ## Structure
 
 ```
@@ -66,13 +99,15 @@ data/            données locales, ignorées par git
 
 ## Fichiers échangés entre A et B
 
-Les trois fichiers vivent dans `app/public/data/`. Tout changement de format se décide à deux et incrémente `version`.
+Les fichiers vivent dans `app/public/data/`. Tout changement de format se décide à deux et incrémente `version`.
 
 | Fichier | Contenu |
 |---|---|
-| `cpg_weights.json` | `version`, `model`, `trained_on`, `intercept`, `age_transform`, et la liste `cpgs` (`cpg`, `weight`, `gene`, `chromosome`, `position`) |
+| `cpg_weights.json` | `version`, `model`, `trained_on`, `intercept`, `age_transform`, et la liste `cpgs` (`cpg`, `weight`, `gene`, `chromosome`, `position`, `r`, `trend`) |
 | `predictions.csv` | `gsm`, `dataset`, `split` (`train`, `test`, `external`), `sex`, `age`, `predicted_age`, `acceleration` |
 | `metrics.json` | par modèle et par jeu : `mae`, `median_ae`, `pearson_r`, `n`, plus `n_cpgs` |
+| `samples.json` | 60 personnes externes : `gsm`, `age`, `sex`, `betas` (dans l'ordre de `cpgs`), `lightgbm` |
+| `markers.json` | les 6 sites les plus corrélés à l'âge : `cpg`, `gene`, `r`, `points` (âge, bêta) |
 
 B peut construire le site avec de faux fichiers au même format en attendant les vrais.
 
@@ -80,13 +115,13 @@ B peut construire le site avec de faux fichiers au même format en attendant les
 
 - [x] 0. Mise en place du dépôt
 - [ ] 1. Lire Horvath 2013 et Hannum 2013
-- [ ] 2. Données : téléchargement des deux jeux, manifeste 450K
-- [ ] 3. Nettoyage : sites communs, valeurs manquantes, présélection des sites
-- [ ] 4. Modèle de référence ElasticNet (objectif : 4 à 5 ans d'erreur moyenne)
-- [ ] 5. Modèles avancés et tableau comparatif
+- [x] 2. Données : téléchargement des deux jeux, manifeste 450K
+- [x] 3. Nettoyage : sites communs, valeurs manquantes, présélection des sites
+- [x] 4. Modèle de référence ElasticNet (objectif : 4 à 5 ans d'erreur moyenne)
+- [x] 5. Modèles avancés et tableau comparatif
 - [ ] 6. Analyse : gènes clés, accélération du vieillissement, correction du biais
-- [ ] 7. Export des fichiers pour le site
-- [ ] 8. Site web
+- [x] 7. Export des fichiers pour le site
+- [x] 8. Site web
 - [ ] 9. README final, vidéo de démo, déploiement
 
 ## Pièges connus
