@@ -5,6 +5,7 @@
 - metrics.json     : erreurs par modèle et par split
 - samples.json     : bêtas de quelques échantillons externes, pour faire tourner l'horloge dans le navigateur
 - markers.json     : nuage âge/bêta des sites les plus liés à l'âge
+- rings.json       : méthylation moyenne de chaque site de l'horloge par décennie d'âge (les « cernes »)
 
 Usage : python -m epichron.export
 """
@@ -62,6 +63,12 @@ def build_weights(clock, manifest: pd.DataFrame, r: pd.Series, trend: pd.DataFra
         "age_transform": {"type": "horvath", "adult_age": ADULT_AGE},
         "cpgs": cpgs,
     }
+
+
+def decade_means(X: pd.DataFrame, age: pd.Series) -> pd.DataFrame:
+    """Moyenne de chaque site par décennie d'âge (10 = 10–19 ans… 90 = 90 ans et plus), sur toutes les personnes."""
+    decade = (age // 10 * 10).clip(10, 90).astype(int)
+    return X.groupby(decade).mean().assign(n=decade.value_counts())
 
 
 def pick_demo_samples(predictions: pd.DataFrame, n: int, seed: int = 42) -> pd.Index:
@@ -127,6 +134,13 @@ def main() -> None:
         for cpg in top
     ]
     (args.out / "markers.json").write_text(json.dumps({"version": CONTRACT_VERSION, "markers": markers}))
+
+    means = decade_means(X[order], predictions["age"])
+    rings = [
+        {"decade": int(d), "n": int(row["n"]), "betas": [round(float(b), 4) for b in row[order]]}
+        for d, row in means.iterrows()
+    ]
+    (args.out / "rings.json").write_text(json.dumps({"version": CONTRACT_VERSION, "rings": rings}))
     print(f"{len(weights['cpgs'])} sites dans l'horloge, {len(samples)} échantillons de démo, export dans {args.out}")
 
 

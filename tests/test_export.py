@@ -27,3 +27,12 @@ def test_demo_samples_cover_age_range():
     ages = predictions.loc[picks, "age"]
     assert len(picks) == 8 and ages.min() < 10 and ages.max() > 70
     assert (predictions.loc[picks, "split"] == "external").all()
+
+
+def test_decade_means_groups_and_clips_ages():
+    age = pd.Series([12.0, 18.0, 25.0, 97.0, 101.0], index=list("abcde"))
+    X = pd.DataFrame({"cg1": [0.1, 0.3, 0.5, 0.8, 0.9]}, index=list("abcde"))
+    means = export.decade_means(X, age)
+    assert list(means.index) == [10, 20, 90]
+    assert np.isclose(means.loc[10, "cg1"], 0.2) and np.isclose(means.loc[90, "cg1"], 0.85)
+    assert list(means["n"]) == [2, 1, 2]
