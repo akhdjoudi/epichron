@@ -66,11 +66,13 @@ data/            données locales, ignorées par git
 
 ## Fichiers échangés entre A et B
 
+Les trois fichiers vivent dans `app/public/data/`. Tout changement de format se décide à deux et incrémente `version`.
+
 | Fichier | Contenu |
 |---|---|
-| `cpg_weights.json` | `cpg`, `weight`, `gene`, `chromosome`, `position`, plus l'`intercept` du modèle |
-| `predictions.csv` | `gsm`, `dataset`, `age`, `predicted_age` |
-| `metrics.json` | erreur absolue moyenne et médiane, corrélation, par jeu de données |
+| `cpg_weights.json` | `version`, `model`, `trained_on`, `intercept`, `age_transform`, et la liste `cpgs` (`cpg`, `weight`, `gene`, `chromosome`, `position`) |
+| `predictions.csv` | `gsm`, `dataset`, `split` (`train`, `test`, `external`), `sex`, `age`, `predicted_age`, `acceleration` |
+| `metrics.json` | par modèle et par jeu : `mae`, `median_ae`, `pearson_r`, `n`, plus `n_cpgs` |
 
 B peut construire le site avec de faux fichiers au même format en attendant les vrais.
 
