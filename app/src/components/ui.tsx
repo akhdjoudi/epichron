@@ -2,9 +2,11 @@
 
 import type { ReactNode } from "react";
 
-export function Panel({ title, tools, children, className = "" }: { title: string; tools?: ReactNode; children: ReactNode; className?: string }) {
+type PanelProps = { id?: string; title: string; tools?: ReactNode; children: ReactNode; className?: string };
+
+export function Panel({ id, title, tools, children, className = "" }: PanelProps) {
   return (
-    <section className={`flex min-h-0 flex-col rounded-[3px] border border-line bg-panel ${className}`}>
+    <section id={id} className={`flex min-h-0 flex-col rounded-[3px] border border-line bg-panel ${className}`}>
       <header className="flex h-9 shrink-0 items-center justify-between gap-3 border-b border-line px-3">
         <h2 className="label truncate">{title}</h2>
         {tools && <div className="no-scrollbar flex items-center gap-1 overflow-x-auto">{tools}</div>}

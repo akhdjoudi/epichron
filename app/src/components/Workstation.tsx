@@ -2,16 +2,16 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
-import { parsePredictions, predictAge, type Prediction, type Sample, type Weights } from "@/lib/clock";
+import { parsePredictions, predictAge, type Prediction, type Ring, type Sample, type Weights } from "@/lib/clock";
 import AgeMap from "./AgeMap";
 import Controls, { type Model } from "./Controls";
-import Faces from "./Faces";
-import type { HeadView } from "./three/AgingHeadsScene";
+import Rings from "./Rings";
 import type { SiteFilter } from "./three/GenomeScene";
+import Tour from "./Tour";
 import { Panel, Segmented, Toggle } from "./ui";
+import WhyAge from "./WhyAge";
 
 const GenomeScene = dynamic(() => import("./three/GenomeScene"), { ssr: false });
-const HelixScene = dynamic(() => import("./three/HelixScene"), { ssr: false });
 
 type Props = { weights: Weights; mae: Record<Model, number> };
 
@@ -20,7 +20,8 @@ export default function Workstation({ weights, mae }: Props) {
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [index, setIndex] = useState(0);
   const [model, setModel] = useState<Model>("elasticnet");
-  const [headView, setHeadView] = useState<HeadView>("trois-quarts");
+  const [rings, setRings] = useState<Ring[]>([]);
+  const [tour, setTour] = useState(false);
   const [ghost, setGhost] = useState(true);
   const [labels, setLabels] = useState(true);
   const [filter, setFilter] = useState<SiteFilter>("all");
@@ -36,6 +37,9 @@ export default function Workstation({ weights, mae }: Props) {
     fetch("/data/predictions.csv")
       .then((r) => r.text())
       .then((t) => setPredictions(parsePredictions(t)));
+    fetch("/data/rings.json")
+      .then((r) => r.json())
+      .then((d: { rings: Ring[] }) => setRings(d.rings));
   }, []);
 
   const predictedAll = useMemo(
@@ -59,11 +63,20 @@ export default function Workstation({ weights, mae }: Props) {
             <a href="https://github.com/akhdjoudi/epichron" className="hover:text-ink">GitHub</a>
           </nav>
         </div>
-        <p className="text-[11px] italic text-ink-3">Usage pédagogique · données publiques GEO</p>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => setTour(true)}
+            className="rounded-[3px] border border-amber/80 bg-amber/10 px-2.5 py-1 text-[11px] text-amber transition hover:bg-amber/20"
+          >
+            Visite guidée
+          </button>
+          <p className="hidden text-[11px] italic text-ink-3 md:block">Usage pédagogique · données publiques GEO</p>
+        </div>
       </header>
 
       <div className="grid gap-2 p-2 lg:h-[calc(100svh-44px)] lg:grid-cols-[1.1fr_1fr_0.62fr]">
         <Panel
+          id="panel-genome"
           title="3D · Génome"
           className="h-[78svh] lg:h-auto"
           tools={
@@ -87,27 +100,16 @@ export default function Workstation({ weights, mae }: Props) {
         </Panel>
 
         <div className="grid gap-2 lg:grid-rows-[1.5fr_1fr]">
-          <Panel
-            title="Visage · âge civil et âge biologique"
-            className="h-[52svh] lg:h-auto"
-            tools={
-              <>
-                <Toggle on={headView === "face"} onClick={() => setHeadView("face")}>Face</Toggle>
-                <Toggle on={headView === "trois-quarts"} onClick={() => setHeadView("trois-quarts")}>3/4</Toggle>
-                <Toggle on={headView === "profil"} onClick={() => setHeadView("profil")}>Profil</Toggle>
-                <Toggle on={headView === "rotation"} onClick={() => setHeadView("rotation")}>Rotation</Toggle>
-              </>
-            }
-          >
-            <Faces realAge={sample?.age ?? null} bioAge={predicted} sampleKey={sample?.gsm ?? ""} view={headView} />
+          <Panel id="panel-rings" title="Cernes · méthylation moyenne par décennie" className="h-[56svh] lg:h-auto">
+            <Rings cpgs={weights.cpgs} rings={rings} realAge={sample?.age ?? null} bioAge={predicted} />
           </Panel>
-          <Panel title="Âge réel × âge prédit" className="h-[340px] lg:h-auto">
+          <Panel id="panel-agemap" title="Âge réel × âge prédit" className="h-[340px] lg:h-auto">
             <AgeMap predictions={predictions} selected={sample && predicted !== null ? { gsm: sample.gsm, age: sample.age, predicted } : null} mae={mae[model]} />
           </Panel>
         </div>
 
-        <div className="grid gap-2 lg:grid-rows-[1.7fr_1fr]">
-          <Panel title="Commandes" className="h-[560px] lg:h-auto">
+        <div className="grid gap-2 lg:grid-rows-[1.15fr_1fr]">
+          <Panel id="panel-controls" title="Commandes" className="h-[560px] lg:h-auto">
             <Controls
               samples={samples}
               index={index}
@@ -119,14 +121,12 @@ export default function Workstation({ weights, mae }: Props) {
               mae={mae}
             />
           </Panel>
-          <Panel title={sample ? `Locus · ${sample.gsm}` : "Locus"} className="h-[320px] lg:h-auto">
-            <HelixScene cpgs={weights.cpgs} betas={sample?.betas ?? null} />
-            <p className="pointer-events-none absolute bottom-2 left-3 right-3 text-[10px] leading-snug text-ink-3">
-              Les 13 sites les plus lourds de l&apos;horloge sur une double hélice. Chaque sphère lumineuse est un groupe méthyle (CH₃) : elle grossit avec le β de l&apos;individu.
-            </p>
+          <Panel id="panel-why" title="Pourquoi cet âge ? · ElasticNet" className="h-[340px] lg:h-auto">
+            <WhyAge weights={weights} sample={sample} />
           </Panel>
         </div>
       </div>
+      <Tour open={tour} onClose={() => setTour(false)} />
     </div>
   );
 }
