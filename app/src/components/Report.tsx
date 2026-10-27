@@ -89,7 +89,10 @@ export default function Report({ metrics, markers }: { metrics: Metrics; markers
       </Panel>
 
       <footer className="flex flex-wrap items-center justify-between gap-3 px-2 py-4 text-[11px] text-ink-3 lg:col-span-2">
-        <span>EpiChron · horloge épigénétique · projet portfolio</span>
+        <span>
+          EpiChron · horloge épigénétique · projet portfolio · Tête 3D : « Infinite, 3D Head Scan » par Lee Perry-Smith,{" "}
+          <a href="https://creativecommons.org/licenses/by/3.0/" className="underline hover:text-ink">CC BY 3.0</a>
+        </span>
         <span className="flex gap-4">
           <a href="https://github.com/akhdjoudi" className="hover:text-ink">@akhdjoudi</a>
           <a href="https://github.com/aymenblk04" className="hover:text-ink">@aymenblk04</a>
