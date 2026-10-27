@@ -5,10 +5,9 @@ import { useEffect, useMemo, useState } from "react";
 import { parsePredictions, predictAge, type Prediction, type Sample, type Weights } from "@/lib/clock";
 import AgeMap from "./AgeMap";
 import Controls, { type Model } from "./Controls";
-import Hologram from "./Hologram";
-import Methylome from "./Methylome";
+import Faces from "./Faces";
+import type { HeadView } from "./three/AgingHeadsScene";
 import type { SiteFilter } from "./three/GenomeScene";
-import type { HoloView } from "./three/HoloHeadScene";
 import { Panel, Segmented, Toggle } from "./ui";
 
 const GenomeScene = dynamic(() => import("./three/GenomeScene"), { ssr: false });
@@ -21,15 +20,11 @@ export default function Workstation({ weights, mae }: Props) {
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [index, setIndex] = useState(0);
   const [model, setModel] = useState<Model>("elasticnet");
-  const [mainView, setMainView] = useState<"holo" | "genome">("holo");
-  const [holoView, setHoloView] = useState<HoloView>("trois-quarts");
+  const [headView, setHeadView] = useState<HeadView>("trois-quarts");
   const [ghost, setGhost] = useState(true);
   const [labels, setLabels] = useState(true);
   const [filter, setFilter] = useState<SiteFilter>("all");
   const [hovered, setHovered] = useState<string | null>(null);
-  const [normalized, setNormalized] = useState(true);
-  const [color, setColor] = useState(false);
-  const [imgLabels, setImgLabels] = useState(true);
 
   useEffect(() => {
     fetch("/data/samples.json")
@@ -69,67 +64,42 @@ export default function Workstation({ weights, mae }: Props) {
 
       <div className="grid gap-2 p-2 lg:h-[calc(100svh-44px)] lg:grid-cols-[1.1fr_1fr_0.62fr]">
         <Panel
-          title={mainView === "holo" ? "3D · Hologramme" : "3D · Génome"}
+          title="3D · Génome"
           className="h-[78svh] lg:h-auto"
           tools={
             <>
-              <Toggle on={mainView === "holo"} onClick={() => setMainView("holo")}>Hologramme</Toggle>
-              <Toggle on={mainView === "genome"} onClick={() => setMainView("genome")}>Génome</Toggle>
-              {mainView === "genome" && (
-                <>
-                  <span className="mx-1 h-4 w-px bg-line" />
-                  <Toggle on={ghost} onClick={() => setGhost((v) => !v)}>Transparence</Toggle>
-                  <Toggle on={labels} onClick={() => setLabels((v) => !v)}>Étiquettes</Toggle>
-                </>
-              )}
+              <Toggle on={ghost} onClick={() => setGhost((v) => !v)}>Transparence</Toggle>
+              <Toggle on={labels} onClick={() => setLabels((v) => !v)}>Étiquettes</Toggle>
             </>
           }
         >
           <div className="absolute inset-0 bottom-12">
-            {mainView === "holo" ? (
-              <Hologram realAge={sample?.age ?? null} bioAge={predicted} sampleKey={sample?.gsm ?? ""} view={holoView} />
-            ) : (
-              <GenomeScene cpgs={weights.cpgs} betas={sample?.betas ?? null} filter={filter} ghost={ghost} labels={labels} hovered={hovered} onHover={setHovered} />
-            )}
+            <GenomeScene cpgs={weights.cpgs} betas={sample?.betas ?? null} filter={filter} ghost={ghost} labels={labels} hovered={hovered} onHover={setHovered} />
           </div>
           <div className="absolute inset-x-0 bottom-0 flex h-12 items-center gap-3 border-t border-line px-3">
-            {mainView === "holo" ? (
-              <>
-                <span className="label">Vue</span>
-                <Segmented<HoloView>
-                  value={holoView}
-                  onChange={setHoloView}
-                  options={[["face", "Face"], ["trois-quarts", "3/4"], ["profil", "Profil"], ["rotation", "Rotation"]]}
-                />
-              </>
-            ) : (
-              <>
-                <span className="label">Sites</span>
-                <Segmented<SiteFilter>
-                  value={filter}
-                  onChange={setFilter}
-                  options={[["all", "Tous"], ["gain", "Gain"], ["loss", "Perte"], ["top", "Top 20"]]}
-                />
-              </>
-            )}
+            <span className="label">Sites</span>
+            <Segmented<SiteFilter>
+              value={filter}
+              onChange={setFilter}
+              options={[["all", "Tous"], ["gain", "Gain"], ["loss", "Perte"], ["top", "Top 20"]]}
+            />
           </div>
         </Panel>
 
         <div className="grid gap-2 lg:grid-rows-[1.5fr_1fr]">
           <Panel
-            title="Méthylome"
+            title="Visage · âge civil et âge biologique"
             className="h-[52svh] lg:h-auto"
             tools={
               <>
-                <Toggle on={!normalized} onClick={() => setNormalized(false)}>β brut</Toggle>
-                <Toggle on={normalized} onClick={() => setNormalized(true)}>Z par site</Toggle>
-                <span className="mx-1 h-4 w-px bg-line" />
-                <Toggle on={imgLabels} onClick={() => setImgLabels((v) => !v)}>Étiquettes</Toggle>
-                <Toggle on={color} onClick={() => setColor((v) => !v)}>Couleur</Toggle>
+                <Toggle on={headView === "face"} onClick={() => setHeadView("face")}>Face</Toggle>
+                <Toggle on={headView === "trois-quarts"} onClick={() => setHeadView("trois-quarts")}>3/4</Toggle>
+                <Toggle on={headView === "profil"} onClick={() => setHeadView("profil")}>Profil</Toggle>
+                <Toggle on={headView === "rotation"} onClick={() => setHeadView("rotation")}>Rotation</Toggle>
               </>
             }
           >
-            <Methylome weights={weights} samples={samples} index={index} onSelect={setIndex} normalized={normalized} color={color} labels={imgLabels} />
+            <Faces realAge={sample?.age ?? null} bioAge={predicted} sampleKey={sample?.gsm ?? ""} view={headView} />
           </Panel>
           <Panel title="Âge réel × âge prédit" className="h-[340px] lg:h-auto">
             <AgeMap predictions={predictions} selected={sample && predicted !== null ? { gsm: sample.gsm, age: sample.age, predicted } : null} mae={mae[model]} />

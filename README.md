@@ -69,8 +69,8 @@ python -m epichron.export       # fichiers du site dans app/public/data/
 ## Site
 
 Une interface en panneaux, inspirée des stations d'imagerie médicale :
-hologramme 3D (une tête à l'âge civil, une à l'âge biologique, rides et affaissement générés selon l'âge),
-génome 3D (chromosomes à l'échelle, sites de l'horloge), méthylome rendu comme un cliché,
+deux bustes réalistes (âge civil et âge biologique) vieillis par le rendu : rides, barbe qui grisonne, taches, affaissement,
+génome 3D (chromosomes à l'échelle, sites de l'horloge),
 carte âge réel × âge prédit, commandes et hélice 3D du locus. L'âge est recalculé dans le navigateur.
 
 La tête est un avatar générique, jamais le visage de la personne : les données ne contiennent que de la méthylation.
