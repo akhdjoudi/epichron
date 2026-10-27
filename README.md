@@ -69,8 +69,13 @@ python -m epichron.export       # fichiers du site dans app/public/data/
 ## Site
 
 Une interface en panneaux, inspirée des stations d'imagerie médicale :
+hologramme 3D (une tête à l'âge civil, une à l'âge biologique, rides et affaissement générés selon l'âge),
 génome 3D (chromosomes à l'échelle, sites de l'horloge), méthylome rendu comme un cliché,
 carte âge réel × âge prédit, commandes et hélice 3D du locus. L'âge est recalculé dans le navigateur.
+
+La tête est un avatar générique, jamais le visage de la personne : les données ne contiennent que de la méthylation.
+Modèle 3D : « Infinite, 3D Head Scan » par Lee Perry-Smith, sous licence
+[CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) (`app/public/models/head_LICENSE.txt`).
 
 ```bash
 cd app
