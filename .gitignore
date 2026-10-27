@@ -1,0 +1,25 @@
+# Données (téléchargées par epichron.geo, jamais dans git)
+data/
+*.parquet
+*.txt.gz
+
+# Python
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Modèles
+*.pkl
+*.joblib
+
+# Site (Next.js)
+node_modules/
+.next/
+out/
+.vercel/
+
+# Divers
+.env*
+.DS_Store
