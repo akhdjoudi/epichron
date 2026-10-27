@@ -30,6 +30,9 @@ export type Sample = {
   lightgbm: number;
 };
 
+/** Méthylation moyenne de chaque site de l'horloge pour une décennie d'âge (ordre de cpg_weights). */
+export type Ring = { decade: number; n: number; betas: number[] };
+
 export type Marker = { cpg: string; gene: string | null; r: number; points: [number, number][] };
 
 export type SplitMetrics = { mae: number; median_ae: number; pearson_r: number; n: number };
@@ -56,6 +59,36 @@ export function predictAge(weights: Weights, betas: number[]): number {
   let y = weights.intercept;
   for (let i = 0; i < weights.cpgs.length; i++) y += weights.cpgs[i].weight * betas[i];
   return inverseTransformAge(y, weights.age_transform.adult_age);
+}
+
+/** F de Horvath : des années vers l'échelle sur laquelle l'horloge est linéaire. */
+export function transformAge(age: number, adultAge = 20): number {
+  return age <= adultAge ? Math.log(age + 1) - Math.log(adultAge + 1) : (age - adultAge) / (adultAge + 1);
+}
+
+export type Contribution = { cpg: Cpg; years: number };
+
+/**
+ * Décompose l'écart entre l'âge prédit et l'âge « typique » qu'aurait une personne de même âge civil
+ * (bêtas sur la droite de tendance de chaque site). Le modèle étant linéaire sur F(âge), chaque site
+ * apporte poids × (bêta − bêta attendu) ; on répartit ensuite l'écart en années au prorata.
+ */
+export function explainAge(weights: Weights, betas: number[], age: number) {
+  const adult = weights.age_transform.adult_age;
+  let yRef = weights.intercept;
+  let yPred = weights.intercept;
+  const raw = weights.cpgs.map((c, i) => {
+    const expected = expectedBeta(c, age);
+    yRef += c.weight * expected;
+    yPred += c.weight * betas[i];
+    return c.weight * (betas[i] - expected);
+  });
+  const refAge = inverseTransformAge(yRef, adult);
+  const predicted = inverseTransformAge(yPred, adult);
+  // Pente locale de F⁻¹ si les deux âges sont confondus.
+  const scale = Math.abs(yPred - yRef) > 1e-9 ? (predicted - refAge) / (yPred - yRef) : (inverseTransformAge(yPred + 1e-4, adult) - predicted) / 1e-4;
+  const contributions: Contribution[] = weights.cpgs.map((cpg, i) => ({ cpg, years: raw[i] * scale }));
+  return { refAge, predicted, contributions };
 }
 
 /** Méthylation attendue d'un site à un âge donné, d'après sa droite de tendance. */
