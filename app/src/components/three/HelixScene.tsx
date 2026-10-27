@@ -132,7 +132,7 @@ function Helix({ cpgs, betas }: { cpgs: Cpg[]; betas: number[] | null }) {
 
 export default function HelixScene({ cpgs, betas }: { cpgs: Cpg[]; betas: number[] | null }) {
   return (
-    <Canvas camera={{ position: [3.5, 1.5, 9], fov: 40 }} dpr={[1, 2]} gl={{ alpha: true }}>
+    <Canvas camera={{ position: [4, 1.5, 15], fov: 40 }} dpr={[1, 2]} gl={{ alpha: true }}>
       <ambientLight intensity={0.5} />
       <directionalLight position={[4, 6, 5]} intensity={1.6} />
       <pointLight position={[-4, -2, 3]} intensity={25} color="#ffb27a" />

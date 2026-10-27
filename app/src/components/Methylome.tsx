@@ -82,7 +82,7 @@ export default function Methylome({ weights, samples, index, onSelect, normalize
     const ctx = cv.getContext("2d")!;
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = "high";
-    ctx.filter = color ? "none" : "blur(0.6px) contrast(1.15)";
+    ctx.filter = color ? "none" : "blur(1.2px) contrast(1.25)";
     ctx.drawImage(source, 0, 0, cv.width, cv.height);
     ctx.filter = "none";
     // Vignettage du cliché.
@@ -125,21 +125,21 @@ export default function Methylome({ weights, samples, index, onSelect, normalize
         {hover && <div className="pointer-events-none absolute inset-y-0 w-px bg-amber/60" style={{ left: ((hover.col + 0.5) / order.length) * size.w }} />}
       </div>
 
-      <div className="num pointer-events-none absolute left-2 top-1.5 text-[11px] font-medium text-black/80 mix-blend-multiply">
+      <div className="num pointer-events-none absolute left-2 top-2 rounded-[2px] bg-black/75 px-1.5 py-0.5 text-[11px] text-ink">
         {sample ? `${sample.gsm} · ${sample.sex ?? "?"} · ${Math.round(sample.age)} ANS` : "chargement…"}
       </div>
-      <div className="num pointer-events-none absolute right-2 top-1.5 text-right text-[10px] leading-tight text-black/70">
+      <div className="num pointer-events-none absolute right-2 top-2 rounded-[2px] bg-black/75 px-1.5 py-0.5 text-right text-[10px] leading-tight text-ink-2">
         {order.length} CPG × {rows} IND.
         <br />
         {normalized ? "Z PAR SITE" : "β BRUT"}
       </div>
       {labels && (
         <>
-          <div className="num pointer-events-none absolute bottom-1.5 left-2 right-2 flex justify-between text-[10px] text-black/70">
-            <span>← SE DÉMÉTHYLE AVEC L&apos;ÂGE</span>
-            <span>SE MÉTHYLE →</span>
+          <div className="num pointer-events-none absolute bottom-2 left-2 right-2 flex justify-between text-[10px] text-ink-2">
+            <span className="rounded-[2px] bg-black/75 px-1.5 py-0.5">← SE DÉMÉTHYLE AVEC L&apos;ÂGE</span>
+            <span className="rounded-[2px] bg-black/75 px-1.5 py-0.5">SE MÉTHYLE →</span>
           </div>
-          <div className="num pointer-events-none absolute left-2 top-8 text-[10px] text-black/60">↓ âge croissant</div>
+          <div className="num pointer-events-none absolute left-2 top-9 rounded-[2px] bg-black/75 px-1.5 py-0.5 text-[10px] text-ink-2">↓ ÂGE CROISSANT</div>
         </>
       )}
       {hover && hoverCpg && (

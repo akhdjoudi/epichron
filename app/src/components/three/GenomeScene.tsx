@@ -38,19 +38,19 @@ function Chromosome({ index, ghost, label, active }: { index: number; ghost: boo
     { len: centro * SCALE, y: h - (centro * SCALE) / 2 },
     { len: h - centro * SCALE, y: (h - centro * SCALE) / 2 },
   ];
-  const fill = active ? "#5a3a2c" : "#3a2a2e";
+  const fill = active ? "#7a3f34" : "#4a2a2c";
   return (
     <group position={[x, -h / 2, z]}>
       {arms.map((arm, i) => (
         <group key={i} position={[0, arm.y, 0]}>
           <mesh>
             <capsuleGeometry args={[ARM, Math.max(0.01, arm.len - 2 * ARM - 0.04), 6, 16]} />
-            <meshStandardMaterial color={fill} roughness={0.7} transparent opacity={ghost ? 0.28 : 0.85} depthWrite={!ghost} />
+            <meshStandardMaterial color={fill} roughness={0.7} transparent opacity={ghost ? 0.5 : 0.9} depthWrite={!ghost} />
           </mesh>
           {ghost && (
             <mesh>
               <capsuleGeometry args={[ARM * 1.01, Math.max(0.01, arm.len - 2 * ARM - 0.04), 4, 10]} />
-              <meshBasicMaterial color="#c9cdd6" wireframe transparent opacity={0.07} />
+              <meshBasicMaterial color="#c9cdd6" wireframe transparent opacity={0.05} />
             </mesh>
           )}
         </group>
@@ -80,7 +80,7 @@ function Nucleus() {
       })}
       <mesh>
         <icosahedronGeometry args={[9.5, 3]} />
-        <meshBasicMaterial color="#9aa0ad" wireframe transparent opacity={0.025} />
+        <meshBasicMaterial color="#9aa0ad" wireframe transparent opacity={0.012} />
       </mesh>
     </group>
   );
@@ -117,7 +117,7 @@ export default function GenomeScene({ cpgs, betas, filter, ghost, labels, hovere
   const named = points.filter((p) => p.c.gene && p.k < 5);
 
   return (
-    <Canvas camera={{ position: [4, 5, 15], fov: 42 }} dpr={[1, 2]} gl={{ alpha: true }} onPointerMissed={() => onHover(null)}>
+    <Canvas camera={{ position: [5, 6.5, 19], fov: 42 }} dpr={[1, 2]} gl={{ alpha: true }} onPointerMissed={() => onHover(null)}>
       <ambientLight intensity={0.6} />
       <pointLight position={[0, 9, 4]} intensity={90} color="#ffd7c2" />
       <pointLight position={[-10, -5, -6]} intensity={50} color="#9fd8ff" />
@@ -178,7 +178,11 @@ export default function GenomeScene({ cpgs, betas, filter, ghost, labels, hovere
           </div>
         </Html>
       )}
-      <OrbitControls makeDefault enablePan={false} minDistance={8} maxDistance={24} autoRotate={!hovered} autoRotateSpeed={0.35} />
+      <OrbitControls makeDefault enablePan={false} enableZoom={false} autoRotate={!hovered} autoRotateSpeed={0.35} />
+      <EffectComposer>
+        <Bloom mipmapBlur intensity={0.8} luminanceThreshold={0.6} />
+      </EffectComposer>
+      {/* Après le compositeur : sinon le post-traitement repeint par-dessus le cube d'orientation. */}
       <GizmoHelper alignment="bottom-left" margin={[52, 52]}>
         <GizmoViewcube
           faces={["D", "G", "H", "B", "A", "P"]}
@@ -189,9 +193,6 @@ export default function GenomeScene({ cpgs, betas, filter, ghost, labels, hovere
           opacity={0.95}
         />
       </GizmoHelper>
-      <EffectComposer>
-        <Bloom mipmapBlur intensity={0.8} luminanceThreshold={0.6} />
-      </EffectComposer>
     </Canvas>
   );
 }

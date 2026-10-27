@@ -108,7 +108,7 @@ export default function Workstation({ weights, mae }: Props) {
           </Panel>
         </div>
 
-        <div className="grid gap-2 lg:grid-rows-[1.25fr_1fr]">
+        <div className="grid gap-2 lg:grid-rows-[1.7fr_1fr]">
           <Panel title="Commandes" className="h-[560px] lg:h-auto">
             <Controls
               samples={samples}

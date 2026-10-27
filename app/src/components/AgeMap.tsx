@@ -4,11 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { Prediction } from "@/lib/clock";
 import { fmt1 } from "@/lib/clock";
 
-const W = 520;
-const H = 300;
 const PAD = { l: 38, r: 14, t: 14, b: 30 };
-const x = (a: number) => PAD.l + (a / 100) * (W - PAD.l - PAD.r);
-const y = (a: number) => H - PAD.b - (a / 100) * (H - PAD.t - PAD.b);
 
 type Props = { predictions: Prediction[]; selected: { gsm: string; age: number; predicted: number } | null; mae: number };
 
@@ -16,9 +12,16 @@ type Props = { predictions: Prediction[]; selected: { gsm: string; age: number; 
 export default function AgeMap({ predictions, selected, mae }: Props) {
   const svg = useRef<SVGSVGElement>(null);
   const [hover, setHover] = useState<Prediction | null>(null);
+  // Le repère suit la taille réelle du panneau : pas d'étirement des textes ni des points.
+  const [{ W, H }, setSize] = useState({ W: 520, H: 300 });
+  useEffect(() => {
+    const ro = new ResizeObserver(([e]) => setSize({ W: Math.max(200, e.contentRect.width), H: Math.max(160, e.contentRect.height) }));
+    ro.observe(svg.current!);
+    return () => ro.disconnect();
+  }, []);
+  const x = (a: number) => PAD.l + (a / 100) * (W - PAD.l - PAD.r);
+  const y = (a: number) => H - PAD.b - (a / 100) * (H - PAD.t - PAD.b);
   const points = predictions.filter((p) => p.split !== "train");
-  const [pulse, setPulse] = useState(0);
-  useEffect(() => setPulse((p) => p + 1), [selected?.gsm]);
 
   function onMove(e: React.MouseEvent<SVGSVGElement>) {
     const rect = svg.current!.getBoundingClientRect();
@@ -54,7 +57,7 @@ export default function AgeMap({ predictions, selected, mae }: Props) {
         </div>
       </div>
       <div className="relative min-w-0 flex-1 p-2">
-        <svg ref={svg} viewBox={`0 0 ${W} ${H}`} className="h-full w-full" preserveAspectRatio="none" onMouseMove={onMove} onMouseLeave={() => setHover(null)} role="img" aria-label="Âge réel contre âge prédit, cohortes de test et externe">
+        <svg ref={svg} viewBox={`0 0 ${W} ${H}`} className="absolute inset-2 h-[calc(100%-1rem)] w-[calc(100%-1rem)]" onMouseMove={onMove} onMouseLeave={() => setHover(null)} role="img" aria-label="Âge réel contre âge prédit, cohortes de test et externe">
           {[0, 20, 40, 60, 80, 100].map((t) => (
             <g key={t}>
               <line x1={x(t)} x2={x(t)} y1={y(0)} y2={y(100)} stroke="var(--line)" />
@@ -64,7 +67,7 @@ export default function AgeMap({ predictions, selected, mae }: Props) {
             </g>
           ))}
           <text x={x(100)} y={H - 1} textAnchor="end" className="num" fontSize="9" fill="var(--ink-3)">ÂGE RÉEL</text>
-          <text x={PAD.l - 30} y={PAD.t - 4} className="num" fontSize="9" fill="var(--ink-3)">PRÉDIT</text>
+          <text x={x(0) + 6} y={y(100) + 12} className="num" fontSize="9" fill="var(--ink-3)">↑ PRÉDIT</text>
           <path d={band(0)} stroke="var(--ink-3)" strokeWidth={1} />
           <path d={band(mae)} stroke="var(--ink-3)" strokeDasharray="3 4" fill="none" />
           <path d={band(-mae)} stroke="var(--ink-3)" strokeDasharray="3 4" fill="none" />
@@ -74,7 +77,7 @@ export default function AgeMap({ predictions, selected, mae }: Props) {
             <circle key={p.gsm} cx={x(p.age)} cy={y(p.predicted_age)} r={1.6} fill={p.acceleration >= 0 ? "var(--gain)" : "var(--loss)"} opacity={0.55} />
           ))}
           {selected && (
-            <g key={pulse}>
+            <g key={selected.gsm}>
               <line x1={x(0)} x2={x(100)} y1={y(selected.predicted)} y2={y(selected.predicted)} stroke="var(--amber)" strokeOpacity={0.45} />
               <line x1={x(selected.age)} x2={x(selected.age)} y1={y(0)} y2={y(100)} stroke="var(--amber)" strokeOpacity={0.45} />
               <circle cx={x(selected.age)} cy={y(selected.predicted)} r={9} fill="none" stroke="var(--amber)" strokeOpacity={0.5}>
