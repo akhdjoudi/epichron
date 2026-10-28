@@ -11,6 +11,7 @@ import argparse
 import gzip
 import re
 import shutil
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -33,14 +34,22 @@ def series_dir(gse: str) -> str:
 
 
 def download(url: str, dest: Path) -> Path:
-    """Télécharge url vers dest, sauf si le fichier existe déjà."""
+    """Télécharge url vers dest, sauf si le fichier existe déjà. Reprend un .part interrompu."""
     if dest.exists():
         return dest
     dest.parent.mkdir(parents=True, exist_ok=True)
     tmp = dest.with_suffix(dest.suffix + ".part")
-    print(f"téléchargement {url}")
-    with urllib.request.urlopen(url, timeout=60) as resp, open(tmp, "wb") as out:
-        shutil.copyfileobj(resp, out, length=1 << 20)
+    done = tmp.stat().st_size if tmp.exists() else 0
+    request = urllib.request.Request(url, headers={"Range": f"bytes={done}-"} if done else {})
+    print(f"téléchargement {url}" + (f" (reprise à {done} octets)" if done else ""))
+    try:
+        with urllib.request.urlopen(request, timeout=60) as resp:
+            # 206 : le serveur reprend ; 200 : il renvoie tout le fichier, on repart de zéro
+            with open(tmp, "ab" if resp.status == 206 else "wb") as out:
+                shutil.copyfileobj(resp, out, length=1 << 20)
+    except urllib.error.HTTPError as e:
+        if e.code != 416:  # 416 : le .part est déjà complet
+            raise
     tmp.rename(dest)
     return dest
 

@@ -1,4 +1,6 @@
 import gzip
+import io
+import urllib.error
 
 import numpy as np
 import pytest
@@ -72,3 +74,51 @@ def test_suppl_betas_drop_pvalues_and_rename(tmp_path):
 
 def test_series_dir():
     assert geo.series_dir("GSE40279") == "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE40nnn/GSE40279"
+
+
+class FakeResponse(io.BytesIO):
+    def __init__(self, data, status):
+        super().__init__(data)
+        self.status = status
+
+
+def fake_server(monkeypatch, content, honor_range=True):
+    seen = []
+
+    def urlopen(request, timeout=None):
+        rng = request.get_header("Range")
+        seen.append(rng)
+        if not rng or not honor_range:
+            return FakeResponse(content, 200)
+        start = int(rng.removeprefix("bytes=").rstrip("-"))
+        if start >= len(content):
+            raise urllib.error.HTTPError(request.full_url, 416, "Range Not Satisfiable", {}, None)
+        return FakeResponse(content[start:], 206)
+
+    monkeypatch.setattr(geo.urllib.request, "urlopen", urlopen)
+    return seen
+
+
+def test_download_resumes_partial_file(tmp_path, monkeypatch):
+    dest = tmp_path / "f.bin"
+    (tmp_path / "f.bin.part").write_bytes(b"0123")
+    seen = fake_server(monkeypatch, b"0123456789")
+    geo.download("http://x/f.bin", dest)
+    assert dest.read_bytes() == b"0123456789"
+    assert seen == ["bytes=4-"]
+
+
+def test_download_restarts_when_server_ignores_range(tmp_path, monkeypatch):
+    dest = tmp_path / "f.bin"
+    (tmp_path / "f.bin.part").write_bytes(b"XXXX")
+    fake_server(monkeypatch, b"0123456789", honor_range=False)
+    geo.download("http://x/f.bin", dest)
+    assert dest.read_bytes() == b"0123456789"
+
+
+def test_download_accepts_complete_part(tmp_path, monkeypatch):
+    dest = tmp_path / "f.bin"
+    (tmp_path / "f.bin.part").write_bytes(b"0123456789")
+    fake_server(monkeypatch, b"0123456789")
+    geo.download("http://x/f.bin", dest)
+    assert dest.read_bytes() == b"0123456789"
