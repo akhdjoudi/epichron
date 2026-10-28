@@ -2,6 +2,8 @@
 
 **Horloge épigénétique : prédire l'âge biologique à partir de la méthylation de l'ADN.**
 
+**Site : [epichron.vercel.app](https://epichron.vercel.app)**
+
 Avec l'âge, certains sites de notre ADN (les sites CpG) se méthylent ou se déméthylent de façon très régulière.
 EpiChron (*épigénétique* et *chronologie*) apprend ce rythme sur des données publiques et prédit l'**âge biologique**
 d'une personne à partir d'une prise de sang, puis le compare à son âge réel.
@@ -146,7 +148,7 @@ B peut construire le site avec de faux fichiers au même format en attendant les
 - [x] 6. Analyse : gènes clés (SHAP), biais et accélération du vieillissement, voir ci-dessous
 - [x] 7. Export des fichiers pour le site
 - [x] 8. Site web
-- [ ] 9. README final, déploiement
+- [x] 9. README final, déploiement (https://epichron.vercel.app)
 
 ## Pièges connus
 
