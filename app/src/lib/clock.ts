@@ -35,6 +35,11 @@ export type Ring = { decade: number; n: number; betas: number[] };
 
 export type Marker = { cpg: string; gene: string | null; r: number; points: [number, number][] };
 
+export type ShapGene = { gene: string; mean_abs_years: number; n_sites: number };
+
+/** Gènes qui pèsent le plus sur l'âge prédit (SHAP), par modèle, sur la cohorte externe. */
+export type Shap = { n: number; elasticnet: { genes: ShapGene[] }; lightgbm: { genes: ShapGene[] } };
+
 export type SplitMetrics = { mae: number; median_ae: number; pearson_r: number; n: number };
 
 export type Metrics = Record<string, Record<string, SplitMetrics | number>>;

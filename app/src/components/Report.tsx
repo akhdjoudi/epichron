@@ -1,4 +1,5 @@
-import { fmt1, type Marker, type Metrics, type SplitMetrics } from "@/lib/clock";
+import { fmt1, type Marker, type Metrics, type Shap, type SplitMetrics } from "@/lib/clock";
+import KeyGenes from "./KeyGenes";
 import Markers from "./Markers";
 import { Panel } from "./ui";
 
@@ -19,7 +20,7 @@ const STEPS = [
   ["05", "Navigateur", "Les poids de l'ElasticNet sont exportés en JSON : l'âge se recalcule ici, sans serveur."],
 ];
 
-export default function Report({ metrics, markers }: { metrics: Metrics; markers: Marker[] }) {
+export default function Report({ metrics, markers, shap }: { metrics: Metrics; markers: Marker[]; shap: Shap }) {
   return (
     <div id="rapport" className="grid gap-2 p-2 pt-0 lg:grid-cols-[1fr_1.6fr]">
       <div className="grid gap-2">
@@ -74,6 +75,10 @@ export default function Report({ metrics, markers }: { metrics: Metrics; markers
 
       <Panel title={`Marqueurs · les ${markers.length} sites les plus corrélés à l'âge`}>
         <Markers markers={markers} />
+      </Panel>
+
+      <Panel title="Gènes clés · ce qui porte l'âge prédit" className="lg:col-span-2">
+        <KeyGenes shap={shap} />
       </Panel>
 
       <Panel title="Méthode" className="lg:col-span-2">
