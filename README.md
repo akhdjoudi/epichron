@@ -33,6 +33,17 @@ LightGBM sur-apprend (erreur quasi nulle sur l'entraînement) : l'ElasticNet res
 - **Régression vers la moyenne** : pente âge prédit ~ âge réel de 0,94 à l'entraînement et **0,85 sur le test interne** (le modèle surestime les jeunes, sous-estime les vieux). Sur la cohorte externe la pente est de **1,00** : il n'y a pas de biais lié à l'âge, mais un décalage constant de +1,2 an (effet de lot entre laboratoires).
 - **Accélération du vieillissement** : calculée comme résidu de la régression de chaque cohorte (indépendante de l'âge). Aucune différence hommes/femmes significative (écart de 0,19 an, p = 0,46).
 
+## Gènes clés (SHAP)
+
+`python -m epichron.shap_analysis` écrit `app/public/data/shap.json` : les sites et les gènes qui pèsent le plus sur l'âge prédit, calculés sur la cohorte externe, en années d'âge prédit.
+
+| Modèle | Gènes en tête (|SHAP| moyen, ans) |
+|---|---|
+| ElasticNet | ELOVL2 (2,9), KLF14 (1,9), CD46 (0,8), FHL2 (0,8), HSPB1 (0,8) |
+| LightGBM | ELOVL2 (5,9), FHL2 (2,4), KLF14 (1,5), RNF180 (0,5), TRIM59 (0,4) |
+
+Les deux modèles, entraînés différemment, retrouvent ELOVL2, FHL2 et KLF14 en tête. Au-delà, ils divergent.
+
 ## Données
 
 Uniquement des données publiques et anonymisées de GEO (puce Illumina 450K, sang total).
@@ -131,7 +142,7 @@ B peut construire le site avec de faux fichiers au même format en attendant les
 - [x] 3. Nettoyage : sites communs, valeurs manquantes, présélection des sites
 - [x] 4. Modèle de référence ElasticNet (objectif : 4 à 5 ans d'erreur moyenne)
 - [x] 5. Modèles avancés et tableau comparatif
-- [ ] 6. Analyse : gènes clés (SHAP à faire) ; biais et accélération du vieillissement faits, voir ci-dessous
+- [x] 6. Analyse : gènes clés (SHAP), biais et accélération du vieillissement, voir ci-dessous
 - [x] 7. Export des fichiers pour le site
 - [x] 8. Site web
 - [ ] 9. README final, vidéo de démo, déploiement

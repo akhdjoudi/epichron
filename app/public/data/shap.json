@@ -1,0 +1,367 @@
+{
+  "explained_on": "external",
+  "n": 729,
+  "unit": "années d'âge prédit",
+  "elasticnet": {
+    "sites": [
+      {
+        "cpg": "cg16867657",
+        "gene": "ELOVL2",
+        "mean_abs_years": 2.921
+      },
+      {
+        "cpg": "cg10501210",
+        "gene": null,
+        "mean_abs_years": 1.198
+      },
+      {
+        "cpg": "cg08097417",
+        "gene": "KLF14",
+        "mean_abs_years": 0.961
+      },
+      {
+        "cpg": "cg16008966",
+        "gene": null,
+        "mean_abs_years": 0.88
+      },
+      {
+        "cpg": "cg21868031",
+        "gene": "CD46",
+        "mean_abs_years": 0.826
+      },
+      {
+        "cpg": "cg07571951",
+        "gene": "HSPB1",
+        "mean_abs_years": 0.786
+      },
+      {
+        "cpg": "cg14209784",
+        "gene": "AGAP11",
+        "mean_abs_years": 0.566
+      },
+      {
+        "cpg": "cg02481950",
+        "gene": "METTL9",
+        "mean_abs_years": 0.565
+      },
+      {
+        "cpg": "cg25428494",
+        "gene": "HPSE",
+        "mean_abs_years": 0.552
+      },
+      {
+        "cpg": "cg22454769",
+        "gene": "FHL2",
+        "mean_abs_years": 0.493
+      },
+      {
+        "cpg": "cg08719712",
+        "gene": "KLF14",
+        "mean_abs_years": 0.491
+      },
+      {
+        "cpg": "cg14361627",
+        "gene": "KLF14",
+        "mean_abs_years": 0.485
+      },
+      {
+        "cpg": "cg05668853",
+        "gene": "RAB34",
+        "mean_abs_years": 0.479
+      },
+      {
+        "cpg": "cg00058879",
+        "gene": "CACNA1I",
+        "mean_abs_years": 0.468
+      },
+      {
+        "cpg": "cg13001142",
+        "gene": "STXBP5",
+        "mean_abs_years": 0.44
+      },
+      {
+        "cpg": "cg26290632",
+        "gene": "CALB1",
+        "mean_abs_years": 0.42
+      },
+      {
+        "cpg": "cg04689379",
+        "gene": "GIPR",
+        "mean_abs_years": 0.41
+      },
+      {
+        "cpg": "cg06419432",
+        "gene": null,
+        "mean_abs_years": 0.391
+      },
+      {
+        "cpg": "cg04105923",
+        "gene": null,
+        "mean_abs_years": 0.388
+      },
+      {
+        "cpg": "cg02924487",
+        "gene": "TP73",
+        "mean_abs_years": 0.383
+      }
+    ],
+    "genes": [
+      {
+        "gene": "ELOVL2",
+        "mean_abs_years": 2.921,
+        "n_sites": 1
+      },
+      {
+        "gene": "KLF14",
+        "mean_abs_years": 1.859,
+        "n_sites": 4
+      },
+      {
+        "gene": "CD46",
+        "mean_abs_years": 0.826,
+        "n_sites": 1
+      },
+      {
+        "gene": "FHL2",
+        "mean_abs_years": 0.822,
+        "n_sites": 2
+      },
+      {
+        "gene": "HSPB1",
+        "mean_abs_years": 0.786,
+        "n_sites": 1
+      },
+      {
+        "gene": "AGAP11",
+        "mean_abs_years": 0.566,
+        "n_sites": 1
+      },
+      {
+        "gene": "METTL9",
+        "mean_abs_years": 0.565,
+        "n_sites": 1
+      },
+      {
+        "gene": "HPSE",
+        "mean_abs_years": 0.552,
+        "n_sites": 1
+      },
+      {
+        "gene": "LRRC23",
+        "mean_abs_years": 0.484,
+        "n_sites": 2
+      },
+      {
+        "gene": "RAB34",
+        "mean_abs_years": 0.479,
+        "n_sites": 1
+      },
+      {
+        "gene": "CACNA1I",
+        "mean_abs_years": 0.468,
+        "n_sites": 1
+      },
+      {
+        "gene": "STXBP5",
+        "mean_abs_years": 0.44,
+        "n_sites": 1
+      },
+      {
+        "gene": "CALB1",
+        "mean_abs_years": 0.42,
+        "n_sites": 1
+      },
+      {
+        "gene": "GIPR",
+        "mean_abs_years": 0.41,
+        "n_sites": 1
+      },
+      {
+        "gene": "RNF180",
+        "mean_abs_years": 0.403,
+        "n_sites": 2
+      }
+    ]
+  },
+  "lightgbm": {
+    "sites": [
+      {
+        "cpg": "cg16867657",
+        "gene": "ELOVL2",
+        "mean_abs_years": 4.455
+      },
+      {
+        "cpg": "cg06639320",
+        "gene": "FHL2",
+        "mean_abs_years": 1.744
+      },
+      {
+        "cpg": "cg24724428",
+        "gene": "ELOVL2",
+        "mean_abs_years": 1.469
+      },
+      {
+        "cpg": "cg10501210",
+        "gene": null,
+        "mean_abs_years": 1.29
+      },
+      {
+        "cpg": "cg21572722",
+        "gene": "ELOVL2",
+        "mean_abs_years": 0.756
+      },
+      {
+        "cpg": "cg14361627",
+        "gene": "KLF14",
+        "mean_abs_years": 0.737
+      },
+      {
+        "cpg": "cg22454769",
+        "gene": "FHL2",
+        "mean_abs_years": 0.621
+      },
+      {
+        "cpg": "cg17621438",
+        "gene": "RNF180",
+        "mean_abs_years": 0.464
+      },
+      {
+        "cpg": "cg08097417",
+        "gene": "KLF14",
+        "mean_abs_years": 0.439
+      },
+      {
+        "cpg": "cg07553761",
+        "gene": "TRIM59",
+        "mean_abs_years": 0.366
+      },
+      {
+        "cpg": "cg14692377",
+        "gene": "SLC6A4",
+        "mean_abs_years": 0.362
+      },
+      {
+        "cpg": "cg23500537",
+        "gene": null,
+        "mean_abs_years": 0.355
+      },
+      {
+        "cpg": "cg22736354",
+        "gene": "NHLRC1",
+        "mean_abs_years": 0.343
+      },
+      {
+        "cpg": "cg24079702",
+        "gene": "FHL2",
+        "mean_abs_years": 0.334
+      },
+      {
+        "cpg": "cg03032497",
+        "gene": null,
+        "mean_abs_years": 0.326
+      },
+      {
+        "cpg": "cg08234504",
+        "gene": null,
+        "mean_abs_years": 0.308
+      },
+      {
+        "cpg": "cg06784991",
+        "gene": "ZYG11A",
+        "mean_abs_years": 0.3
+      },
+      {
+        "cpg": "cg23597288",
+        "gene": "LRP5L",
+        "mean_abs_years": 0.297
+      },
+      {
+        "cpg": "cg18037834",
+        "gene": "TENC1",
+        "mean_abs_years": 0.287
+      },
+      {
+        "cpg": "cg07955995",
+        "gene": "KLF14",
+        "mean_abs_years": 0.273
+      }
+    ],
+    "genes": [
+      {
+        "gene": "ELOVL2",
+        "mean_abs_years": 5.914,
+        "n_sites": 3
+      },
+      {
+        "gene": "FHL2",
+        "mean_abs_years": 2.445,
+        "n_sites": 3
+      },
+      {
+        "gene": "KLF14",
+        "mean_abs_years": 1.453,
+        "n_sites": 8
+      },
+      {
+        "gene": "RNF180",
+        "mean_abs_years": 0.502,
+        "n_sites": 2
+      },
+      {
+        "gene": "TRIM59",
+        "mean_abs_years": 0.377,
+        "n_sites": 2
+      },
+      {
+        "gene": "SLC6A4",
+        "mean_abs_years": 0.362,
+        "n_sites": 1
+      },
+      {
+        "gene": "ZYG11A",
+        "mean_abs_years": 0.352,
+        "n_sites": 5
+      },
+      {
+        "gene": "NHLRC1",
+        "mean_abs_years": 0.343,
+        "n_sites": 1
+      },
+      {
+        "gene": "LRP5L",
+        "mean_abs_years": 0.297,
+        "n_sites": 1
+      },
+      {
+        "gene": "TENC1",
+        "mean_abs_years": 0.287,
+        "n_sites": 2
+      },
+      {
+        "gene": "LRRC23",
+        "mean_abs_years": 0.256,
+        "n_sites": 2
+      },
+      {
+        "gene": "VGF",
+        "mean_abs_years": 0.234,
+        "n_sites": 2
+      },
+      {
+        "gene": "TRIM45",
+        "mean_abs_years": 0.23,
+        "n_sites": 1
+      },
+      {
+        "gene": "HCG18",
+        "mean_abs_years": 0.202,
+        "n_sites": 2
+      },
+      {
+        "gene": "ACSS3",
+        "mean_abs_years": 0.192,
+        "n_sites": 1
+      }
+    ]
+  }
+}
