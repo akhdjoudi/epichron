@@ -6,6 +6,7 @@ import { Panel } from "./ui";
 const MODELS: [string, string][] = [
   ["elasticnet", "ElasticNet"],
   ["lightgbm", "LightGBM"],
+  ["neural", "Réseau de neurones"],
 ];
 const SPLITS: [string, string][] = [
   ["test", "Test interne · GSE40279"],

@@ -39,5 +39,25 @@
       "pearson_r": 1.0,
       "n": 526
     }
+  },
+  "neural": {
+    "external": {
+      "mae": 3.63,
+      "median_ae": 3.15,
+      "pearson_r": 0.979,
+      "n": 729
+    },
+    "test": {
+      "mae": 4.25,
+      "median_ae": 2.77,
+      "pearson_r": 0.916,
+      "n": 130
+    },
+    "train": {
+      "mae": 2.55,
+      "median_ae": 2.12,
+      "pearson_r": 0.974,
+      "n": 526
+    }
   }
 }

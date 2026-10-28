@@ -22,9 +22,10 @@ Horloge ElasticNet de **249 sites CpG**, entraînée sur GSE40279 :
 |---|---|---|
 | ElasticNet | 3,8 ans d'erreur moyenne, r = 0,935 | **3,0 ans**, r = 0,986 |
 | LightGBM | 4,2 ans, r = 0,924 | 4,0 ans, r = 0,980 |
+| Réseau de neurones | 4,3 ans, r = 0,916 | 3,6 ans, r = 0,979 |
 
 ELOVL2, FHL2 et KLF14, les marqueurs connus du vieillissement, ressortent d'eux-mêmes parmi les sites retenus.
-LightGBM sur-apprend (erreur quasi nulle sur l'entraînement) : l'ElasticNet reste le modèle de référence.
+LightGBM sur-apprend (erreur quasi nulle sur l'entraînement). Le réseau de neurones (une couche de 64 neurones sur 200 sites, réglé par validation croisée sur le train) sur-apprend peu, mais ne bat pas l'ElasticNet : avec 526 personnes d'entraînement, le modèle linéaire reste le modèle de référence.
 
 ## Analyse du biais et de l'accélération
 
