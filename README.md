@@ -47,6 +47,18 @@ LightGBM sur-apprend (erreur quasi nulle sur l'entraînement). Le réseau de neu
 
 Les deux modèles, entraînés différemment, retrouvent ELOVL2, FHL2 et KLF14 en tête. Au-delà, ils divergent.
 
+## Limites
+
+Ce que ces résultats permettent d'affirmer, et ce qu'ils ne permettent pas.
+
+- **Deux cohortes seulement.** Un seul jeu d'entraînement (GSE40279) et une seule cohorte externe (GSE87571), toutes deux en sang total sur puce 450K. On ne sait rien de la généralisation à d'autres tissus, d'autres puces ou d'autres populations. L'ascendance des participants n'a pas été analysée.
+- **Peu de jeunes à l'entraînement.** 28 personnes de moins de 40 ans sur 526, et seulement 7 dans le test interne (130 personnes). La pente du biais d'âge mesurée sur le test interne (0,85) est donc peu fiable aux jeunes âges, et elle ne se retrouve pas sur la cohorte externe (1,00).
+- **Effet de lot.** Les deux cohortes viennent de laboratoires différents. Sur la cohorte externe, l'âge prédit est en moyenne 1,3 an trop élevé, un décalage constant qu'on ne peut corriger qu'avec des âges réels de cette cohorte.
+- **Plage d'âges.** Les modèles n'ont vu que des personnes de 14 à 101 ans : rien ne permet de les utiliser sur des enfants plus jeunes.
+- **Pas de validation clinique.** Aucune donnée de santé ou de mortalité n'a été utilisée. L'accélération du vieillissement est un écart statistique entre âge prédit et âge réel, pas une mesure de santé. Aucune différence hommes/femmes significative n'a été trouvée, ce qui ne prouve pas qu'il n'y en a pas.
+- **SHAP explique le modèle, pas la biologie.** Un gène en tête indique ce sur quoi le modèle s'appuie, pas qu'il cause le vieillissement. Les deux modèles ne s'accordent que sur les trois premiers gènes (ELOVL2, FHL2, KLF14).
+- **Réglages sur peu de données.** Avec 526 personnes d'entraînement, l'écart entre ElasticNet (3,0 ans), réseau de neurones (3,6) et LightGBM (4,0) sur une seule cohorte externe ne dit pas lequel est meilleur ailleurs.
+
 ## Données
 
 Uniquement des données publiques et anonymisées de GEO (puce Illumina 450K, sang total).
