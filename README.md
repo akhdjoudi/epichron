@@ -125,49 +125,6 @@ app/             site web (Next.js)
 data/            données locales, ignorées par git
 ```
 
-## Rôles
-
-| | Personne A : données et modèles | Personne B : analyse et produit |
-|---|---|---|
-| Données | téléchargement, nettoyage, sites communs aux deux jeux | manifeste Illumina 450K (site → gène, chromosome) |
-| Modèles | ElasticNet de référence, LightGBM, réseau de neurones | interprétabilité (SHAP), gènes associés |
-| Évaluation | validation croisée entre cohortes | accélération du vieillissement, biais selon l'âge |
-| Produit | export du modèle | site web, visualisations, déploiement |
-
-## Fichiers échangés entre A et B
-
-Les fichiers vivent dans `app/public/data/`. Tout changement de format se décide à deux et incrémente `version`.
-
-| Fichier | Contenu |
-|---|---|
-| `cpg_weights.json` | `version`, `model`, `trained_on`, `intercept`, `age_transform`, et la liste `cpgs` (`cpg`, `weight`, `gene`, `chromosome`, `position`, `r`, `trend`) |
-| `predictions.csv` | `gsm`, `dataset`, `split` (`train`, `test`, `external`), `sex`, `age`, `predicted_age`, `acceleration` |
-| `metrics.json` | par modèle et par jeu : `mae`, `median_ae`, `pearson_r`, `n`, plus `n_cpgs` |
-| `samples.json` | 60 personnes externes : `gsm`, `age`, `sex`, `betas` (dans l'ordre de `cpgs`), `lightgbm` |
-| `markers.json` | les 6 sites les plus corrélés à l'âge : `cpg`, `gene`, `r`, `points` (âge, bêta) |
-| `rings.json` | par décennie d'âge (10 à 90 et plus) : `decade`, `n`, `betas` moyens dans l'ordre de `cpgs` |
-
-B peut construire le site avec de faux fichiers au même format en attendant les vrais.
-
-## Feuille de route
-
-- [x] 0. Mise en place du dépôt
-- [ ] 1. Lire Horvath 2013 et Hannum 2013
-- [x] 2. Données : téléchargement des deux jeux, manifeste 450K
-- [x] 3. Nettoyage : sites communs, valeurs manquantes, présélection des sites
-- [x] 4. Modèle de référence ElasticNet (objectif : 4 à 5 ans d'erreur moyenne)
-- [x] 5. Modèles avancés et tableau comparatif
-- [x] 6. Analyse : gènes clés (SHAP), biais et accélération du vieillissement, voir ci-dessous
-- [x] 7. Export des fichiers pour le site
-- [x] 8. Site web
-- [x] 9. README final, déploiement (https://epichron.vercel.app)
-
-## Pièges connus
-
-1. **Fuite de données** : toute sélection de sites se fait sur l'entraînement seulement, jamais sur toutes les données.
-2. **Régression vers la moyenne** : le modèle surestime l'âge des jeunes et sous-estime celui des plus âgés. Il faut le montrer et le corriger.
-3. **Effets de lot** : les deux jeux viennent de laboratoires différents, avec des prétraitements différents.
-
 ## Références
 
 - Horvath S. (2013). *DNA methylation age of human tissues and cell types.* Genome Biology 14, R115.
