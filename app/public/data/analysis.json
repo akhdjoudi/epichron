@@ -1,0 +1,132 @@
+{
+  "bias_lines": {
+    "external": {
+      "slope": 1.0017603936975767,
+      "slope_stderr": 0.006288837509551185,
+      "intercept": 1.2241582389217172,
+      "r": 0.9859749176901482,
+      "n": 729
+    },
+    "test": {
+      "slope": 0.8490587892767507,
+      "slope_stderr": 0.02838446688593986,
+      "intercept": 9.293788623569753,
+      "r": 0.935334343953778,
+      "n": 130
+    },
+    "train": {
+      "slope": 0.94156170997191,
+      "slope_stderr": 0.006231140404164054,
+      "intercept": 3.740107596018305,
+      "r": 0.9887191654515727,
+      "n": 526
+    }
+  },
+  "correction": {
+    "fitted_on": "test",
+    "applied_to": "external",
+    "slope": 0.8490587892767507,
+    "slope_stderr": 0.02838446688593986,
+    "intercept": 9.293788623569753,
+    "r": 0.935334343953778,
+    "n": 130,
+    "mae_before": 2.96,
+    "mae_after": 4.55,
+    "mean_error_before": 1.31,
+    "mean_error_after": -0.98
+  },
+  "error_by_age": {
+    "before": [
+      {
+        "from": 10,
+        "to": 30,
+        "n": 186,
+        "bias": 0.38,
+        "mae": 2.33
+      },
+      {
+        "from": 30,
+        "to": 50,
+        "n": 213,
+        "bias": 2.38,
+        "mae": 3.0
+      },
+      {
+        "from": 50,
+        "to": 70,
+        "n": 188,
+        "bias": 1.6,
+        "mae": 3.12
+      },
+      {
+        "from": 70,
+        "to": null,
+        "n": 142,
+        "bias": 0.54,
+        "mae": 3.5
+      }
+    ],
+    "after": [
+      {
+        "from": 10,
+        "to": 30,
+        "n": 186,
+        "bias": -6.95,
+        "mae": 7.09
+      },
+      {
+        "from": 30,
+        "to": 50,
+        "n": 213,
+        "bias": -0.86,
+        "mae": 2.9
+      },
+      {
+        "from": 50,
+        "to": 70,
+        "n": 188,
+        "bias": 1.52,
+        "mae": 3.67
+      },
+      {
+        "from": 70,
+        "to": null,
+        "n": 142,
+        "bias": 3.34,
+        "mae": 4.85
+      }
+    ]
+  },
+  "acceleration_by_sex": {
+    "raw": {
+      "external": {
+        "F": 1.4,
+        "M": 1.21,
+        "diff_M_minus_F": -0.19,
+        "p_value": 0.4680941159305889,
+        "n_F": 388,
+        "n_M": 341
+      },
+      "test": {
+        "F": -0.54,
+        "M": -0.22,
+        "diff_M_minus_F": 0.32,
+        "p_value": 0.7385547913117161,
+        "n_F": 70,
+        "n_M": 60
+      }
+    },
+    "age_independent": {
+      "F": 0.09,
+      "M": -0.1,
+      "diff_M_minus_F": -0.19,
+      "p_value": 0.4630889577968986,
+      "n_F": 388,
+      "n_M": 341
+    }
+  },
+  "age_vs_acceleration_r": {
+    "raw": 0.01,
+    "age_independent": 0.0
+  }
+}
