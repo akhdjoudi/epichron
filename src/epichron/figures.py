@@ -1,4 +1,4 @@
-"""Figures de l'analyse (étape 6) dans reports/ : biais d'âge, correction, accélération par sexe.
+"""Figures de l'analyse (étape 6) dans reports/ : biais d'âge et accélération par sexe.
 
 Usage : python -m epichron.figures
 """
@@ -12,12 +12,12 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from epichron.analysis import DATA_DIR, EVAL_SPLIT, FIT_SPLIT, bias_line, correct, residual_acceleration
+from epichron.analysis import DATA_DIR, EVAL_SPLIT, bias_line, residual_acceleration
 
 
 def plot_bias(pred: pd.DataFrame, out: Path) -> None:
     fig, axes = plt.subplots(1, 3, figsize=(14, 4.2), sharey=True)
-    for ax, split in zip(axes, ["train", FIT_SPLIT, EVAL_SPLIT]):
+    for ax, split in zip(axes, ["train", "test", EVAL_SPLIT]):
         g = pred[pred.split == split]
         line = bias_line(g.age, g.predicted_age)
         ax.scatter(g.age, g.predicted_age, s=8, alpha=0.5)
@@ -28,20 +28,6 @@ def plot_bias(pred: pd.DataFrame, out: Path) -> None:
     axes[0].set_ylabel("âge prédit")
     fig.tight_layout()
     fig.savefig(out / "biais_age.png", dpi=150)
-
-
-def plot_correction(pred: pd.DataFrame, out: Path) -> None:
-    fit = pred[pred.split == FIT_SPLIT]
-    ext = pred[pred.split == EVAL_SPLIT]
-    line = bias_line(fit.age, fit.predicted_age)
-    fig, ax = plt.subplots(figsize=(6, 4.2))
-    ax.scatter(ext.age, ext.predicted_age - ext.age, s=8, alpha=0.4, label="brut")
-    ax.scatter(ext.age, correct(ext.predicted_age, ext.age, line) - ext.age, s=8, alpha=0.4, label="corrigé (droite du test interne)")
-    ax.axhline(0, color="k", lw=1)
-    ax.set(xlabel="âge réel", ylabel="erreur (prédit - réel, ans)", title="Cohorte externe")
-    ax.legend()
-    fig.tight_layout()
-    fig.savefig(out / "correction.png", dpi=150)
 
 
 def plot_sex(pred: pd.DataFrame, out: Path) -> None:
@@ -63,7 +49,6 @@ def main() -> None:
     args.out.mkdir(exist_ok=True)
     pred = pd.read_csv(args.data_dir / "predictions.csv")
     plot_bias(pred, args.out)
-    plot_correction(pred, args.out)
     plot_sex(pred, args.out)
     print(f"Figures dans {args.out}/")
 

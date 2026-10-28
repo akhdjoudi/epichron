@@ -22,81 +22,36 @@
       "n": 526
     }
   },
-  "correction": {
-    "fitted_on": "test",
-    "applied_to": "external",
-    "slope": 0.8490587892767507,
-    "slope_stderr": 0.02838446688593986,
-    "intercept": 9.293788623569753,
-    "r": 0.935334343953778,
-    "n": 130,
-    "mae_before": 2.96,
-    "mae_after": 4.55,
-    "mean_error_before": 1.31,
-    "mean_error_after": -0.98
-  },
-  "error_by_age": {
-    "before": [
-      {
-        "from": 10,
-        "to": 30,
-        "n": 186,
-        "bias": 0.38,
-        "mae": 2.33
-      },
-      {
-        "from": 30,
-        "to": 50,
-        "n": 213,
-        "bias": 2.38,
-        "mae": 3.0
-      },
-      {
-        "from": 50,
-        "to": 70,
-        "n": 188,
-        "bias": 1.6,
-        "mae": 3.12
-      },
-      {
-        "from": 70,
-        "to": null,
-        "n": 142,
-        "bias": 0.54,
-        "mae": 3.5
-      }
-    ],
-    "after": [
-      {
-        "from": 10,
-        "to": 30,
-        "n": 186,
-        "bias": -6.95,
-        "mae": 7.09
-      },
-      {
-        "from": 30,
-        "to": 50,
-        "n": 213,
-        "bias": -0.86,
-        "mae": 2.9
-      },
-      {
-        "from": 50,
-        "to": 70,
-        "n": 188,
-        "bias": 1.52,
-        "mae": 3.67
-      },
-      {
-        "from": 70,
-        "to": null,
-        "n": 142,
-        "bias": 3.34,
-        "mae": 4.85
-      }
-    ]
-  },
+  "error_by_age": [
+    {
+      "from": 10,
+      "to": 30,
+      "n": 186,
+      "bias": 0.38,
+      "mae": 2.33
+    },
+    {
+      "from": 30,
+      "to": 50,
+      "n": 213,
+      "bias": 2.38,
+      "mae": 3.0
+    },
+    {
+      "from": 50,
+      "to": 70,
+      "n": 188,
+      "bias": 1.6,
+      "mae": 3.12
+    },
+    {
+      "from": 70,
+      "to": null,
+      "n": 142,
+      "bias": 0.54,
+      "mae": 3.5
+    }
+  ],
   "acceleration_by_sex": {
     "raw": {
       "external": {

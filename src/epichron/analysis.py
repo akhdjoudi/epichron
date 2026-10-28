@@ -1,14 +1,11 @@
-"""Analyse des prédictions : biais lié à l'âge, correction, accélération du vieillissement.
+"""Analyse des prédictions : biais lié à l'âge, accélération du vieillissement.
 
 Lit app/public/data/predictions.csv et écrit app/public/data/analysis.json.
 
 Deux notions à ne pas confondre :
 - accélération brute  = âge prédit - âge réel (déjà dans predictions.csv), qui dépend de l'âge si le modèle est biaisé ;
-- accélération corrigée = résidu de la régression âge prédit ~ âge réel, qui n'en dépend plus (EAA / AgeAccelResid).
-
-La droite de correction s'ajuste sur le test interne (jamais vu à l'entraînement, où le modèle sur-apprend),
-puis s'applique telle quelle à la cohorte externe : c'est le seul test honnête d'une correction transférable.
-L'accélération corrigée, elle, se calcule cohorte par cohorte (on retire à chaque cohorte son propre biais).
+- accélération indépendante de l'âge = résidu de la régression âge prédit ~ âge réel (EAA / AgeAccelResid),
+  calculée cohorte par cohorte.
 
 Usage : python -m epichron.analysis
 """
@@ -22,7 +19,6 @@ import pandas as pd
 from scipy import stats
 
 DATA_DIR = Path("app/public/data")
-FIT_SPLIT = "test"
 EVAL_SPLIT = "external"
 AGE_BINS = [(10, 30), (30, 50), (50, 70), (70, 110)]
 
@@ -32,11 +28,6 @@ def bias_line(age: pd.Series, predicted: pd.Series) -> dict:
     fit = stats.linregress(age, predicted)
     return {"slope": float(fit.slope), "slope_stderr": float(fit.stderr), "intercept": float(fit.intercept),
             "r": float(fit.rvalue), "n": int(len(age))}
-
-
-def correct(predicted: pd.Series, age: pd.Series, line: dict) -> pd.Series:
-    """Redresse l'âge prédit pour retirer le biais : on inverse la droite de biais."""
-    return (predicted - line["intercept"]) / line["slope"]
 
 
 def error_by_age_bin(age: pd.Series, predicted: pd.Series) -> list[dict]:
@@ -69,28 +60,13 @@ def residual_acceleration(df: pd.DataFrame) -> pd.Series:
 
 
 def analyse(predictions: pd.DataFrame) -> dict:
-    fit = predictions[predictions.split == FIT_SPLIT]
     ext = predictions[predictions.split == EVAL_SPLIT].copy()
-    line = bias_line(fit.age, fit.predicted_age)
-
-    ext["corrected"] = correct(ext.predicted_age, ext.age, line)
     ext["raw_error"] = ext.predicted_age - ext.age
-    ext["corrected_error"] = ext.corrected - ext.age
     ext["residual"] = residual_acceleration(ext)
 
     return {
         "bias_lines": {s: bias_line(g.age, g.predicted_age) for s, g in predictions.groupby("split")},
-        "correction": {
-            "fitted_on": FIT_SPLIT, "applied_to": EVAL_SPLIT, **line,
-            "mae_before": round(float(ext.raw_error.abs().mean()), 2),
-            "mae_after": round(float(ext.corrected_error.abs().mean()), 2),
-            "mean_error_before": round(float(ext.raw_error.mean()), 2),
-            "mean_error_after": round(float(ext.corrected_error.mean()), 2),
-        },
-        "error_by_age": {
-            "before": error_by_age_bin(ext.age, ext.predicted_age),
-            "after": error_by_age_bin(ext.age, ext.corrected),
-        },
+        "error_by_age": error_by_age_bin(ext.age, ext.predicted_age),
         "acceleration_by_sex": {
             "raw": {s: acceleration_by_sex(g, "acceleration") for s, g in predictions.groupby("split") if s != "train"},
             "age_independent": acceleration_by_sex(ext, "residual"),

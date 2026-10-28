@@ -31,7 +31,6 @@ LightGBM sur-apprend (erreur quasi nulle sur l'entraînement) : l'ElasticNet res
 `python -m epichron.analysis` écrit `app/public/data/analysis.json`, `python -m epichron.figures` les graphiques dans `reports/`.
 
 - **Régression vers la moyenne** : pente âge prédit ~ âge réel de 0,94 à l'entraînement et **0,85 sur le test interne** (le modèle surestime les jeunes, sous-estime les vieux). Sur la cohorte externe la pente est de **1,00** : il n'y a pas de biais lié à l'âge, mais un décalage constant de +1,2 an (effet de lot entre laboratoires).
-- **Une correction ne se transfère pas** : la droite ajustée sur le test interne (130 personnes, presque aucune de moins de 40 ans) dégrade la cohorte externe, de 3,0 à 4,6 ans d'erreur. Le biais dépend de la cohorte : on ne corrige qu'avec des données étiquetées de la cohorte visée.
 - **Accélération du vieillissement** : calculée comme résidu de la régression de chaque cohorte (indépendante de l'âge). Aucune différence hommes/femmes significative (écart de 0,19 an, p = 0,46).
 
 ## Données
@@ -132,7 +131,7 @@ B peut construire le site avec de faux fichiers au même format en attendant les
 - [x] 3. Nettoyage : sites communs, valeurs manquantes, présélection des sites
 - [x] 4. Modèle de référence ElasticNet (objectif : 4 à 5 ans d'erreur moyenne)
 - [x] 5. Modèles avancés et tableau comparatif
-- [ ] 6. Analyse : gènes clés (SHAP à faire), ~~accélération du vieillissement, correction du biais~~ (fait, voir ci-dessous)
+- [ ] 6. Analyse : gènes clés (SHAP à faire) ; biais et accélération du vieillissement faits, voir ci-dessous
 - [x] 7. Export des fichiers pour le site
 - [x] 8. Site web
 - [ ] 9. README final, vidéo de démo, déploiement
