@@ -39,7 +39,7 @@ def download(url: str, dest: Path) -> Path:
     dest.parent.mkdir(parents=True, exist_ok=True)
     tmp = dest.with_suffix(dest.suffix + ".part")
     print(f"téléchargement {url}")
-    with urllib.request.urlopen(url) as resp, open(tmp, "wb") as out:
+    with urllib.request.urlopen(url, timeout=60) as resp, open(tmp, "wb") as out:
         shutil.copyfileobj(resp, out, length=1 << 20)
     tmp.rename(dest)
     return dest
