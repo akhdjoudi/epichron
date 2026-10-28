@@ -146,7 +146,7 @@ B peut construire le site avec de faux fichiers au même format en attendant les
 - [x] 6. Analyse : gènes clés (SHAP), biais et accélération du vieillissement, voir ci-dessous
 - [x] 7. Export des fichiers pour le site
 - [x] 8. Site web
-- [ ] 9. README final, vidéo de démo, déploiement
+- [ ] 9. README final, déploiement
 
 ## Pièges connus
 
